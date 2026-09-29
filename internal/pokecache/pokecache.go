@@ -19,6 +19,7 @@ type Cache struct {
 
 func NewCache(interval time.Duration) *Cache {
 	pokeCache := Cache {
+		cacheEntries: make(map[string]cacheEntry),
 		interval: interval,
 		ticker: time.NewTicker(interval), 
 	}
@@ -46,7 +47,7 @@ func (c *Cache) reapLoop() {
 	for  range c.ticker.C {
 		c.mu.Lock()
 		for key, entry := range c.cacheEntries {
-			if entry.createdAt.Before(time.Now().Add(-c.interval)) {
+			if time.Since(entry.createdAt) > c.interval {
 				delete(c.cacheEntries, key)
 			}
 		}
