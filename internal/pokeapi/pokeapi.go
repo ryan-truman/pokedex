@@ -43,7 +43,6 @@ func (c *Client) ListLocations(url string) (locationAreas, error){
 
 	body, cached := c.cache.Get(url)
 	if !cached {
-		fmt.Println("not cached")
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			return locations, err
@@ -66,7 +65,6 @@ func (c *Client) ListLocations(url string) (locationAreas, error){
 		c.cache.Add(url, body)
 	}
 
-	fmt.Println("cached")
 	if err := json.Unmarshal(body, &locations); err != nil {
 		return locations, err
 	}
