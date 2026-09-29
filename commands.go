@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"os"
 	"pokedex/internal/pokeapi"
+	"pokedex/internal/pokecache"
 )
 
 type config struct {
 	cliCommands map[string]cliCommand
 	Location    map[string]string
 	client      pokeapi.Client
+	cache       *pokecache.Cache
 }
 
 type cliCommand struct {

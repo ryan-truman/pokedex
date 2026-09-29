@@ -14,7 +14,7 @@ func cleanInput(text string) []string {
 }
 
 func main() {
-	pokeapiClient := pokeapi.NewClient(5 * time.Second)
+	pokeapiClient := pokeapi.NewClient(5 * time.Second, 5 * time.Second)
 	sharedState := config {
 		cliCommands: map[string]cliCommand {
 			"exit": {
