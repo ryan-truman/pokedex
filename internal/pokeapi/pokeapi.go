@@ -26,6 +26,15 @@ type locationAreas struct {
 	} `json:"results"`
 }
 
+type areaPokemon struct {
+	PokemonEncounters []struct {
+		Pokemon struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"pokemon"`
+	} `json:"pokemon_encounters"`
+}
+
 func NewClient(timeout, interval time.Duration) Client {
 	return Client{
 		httpClient: http.Client{
@@ -70,4 +79,41 @@ func (c *Client) ListLocations(url string) (locationAreas, error){
 	}
 
 	return locations, nil
+}
+
+func (c *Client) ExploreArea(area string) error {
+	fullURL := baseURL + "/location-area/" + area
+	var pokemon areaPokemon
+	body, cached := c.cache.Get(area)
+	if !cached {
+		req, err := http.NewRequest("GET", fullURL, nil)
+		if err != nil {
+			return err
+		}
+
+		response, err := c.httpClient.Do(req)
+		if err != nil {
+			return err
+		}
+		defer response.Body.Close()
+
+		if response.StatusCode > 299 {
+				return fmt.Errorf("bad status code: %v", response.StatusCode)
+		}
+
+		body, err = io.ReadAll(response.Body)
+		if err != nil {
+			return err
+		}
+		c.cache.Add(area, body)
+	}
+	if err := json.Unmarshal(body, &pokemon); err != nil {
+		return err
+	}
+
+	for _, mon := range pokemon.PokemonEncounters {
+		fmt.Println(mon.Pokemon.Name)
+	}
+
+	return nil
 }

@@ -37,6 +37,11 @@ func main() {
 				description: "Display the names of the previous 20 locations",
 				callback:    commandMapB,
 			},
+			"explore": {
+				name:        "explore",
+				description: "Explore a location for pokemon",
+				callback:    commandExplore,
+			},
 		},
 		Location: map[string]string {
 			"Next": "",
@@ -50,10 +55,14 @@ func main() {
 		fmt.Print("Pokedex >")
 		if scanner.Scan() {
 			input := cleanInput(scanner.Text())
+			argument := ""
+			if len(input) > 1 {
+				argument = input[1]
+			}
 			if len(input) > 0 {
 				val, ok := sharedState.cliCommands[input[0]]
 				if ok {
-					err := val.callback(&sharedState)
+					err := val.callback(&sharedState, argument)
 					if err != nil {
 						fmt.Println(err)
 					}
@@ -61,8 +70,8 @@ func main() {
 					fmt.Println("Unknown command")
 				}
 			}
-		} else if scanner.Err != nil {
-			fmt.Println(scanner.Err)
+		} else if scanner.Err() != nil {
+			fmt.Println(scanner.Err())
 		} else {
 			break
 		}

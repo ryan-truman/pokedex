@@ -15,16 +15,16 @@ type config struct {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, string) error
 }
 
-func commandExit(*config) error {
+func commandExit(*config, string) error {
 	fmt.Printf("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil 
 }
 
-func commandHelp(*config) error {
+func commandHelp(*config, string) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println("")
@@ -34,7 +34,7 @@ func commandHelp(*config) error {
 }
 
 
-func commandMap( sharedState *config) error {
+func commandMap( sharedState *config, argument string) error {
 	var url string
 	if sharedState.Location["Next"] == "" {
 		url = ""
@@ -53,7 +53,7 @@ func commandMap( sharedState *config) error {
 	return nil
 }
 
-func commandMapB( sharedState *config) error {
+func commandMapB( sharedState *config, argument string) error {
 	var url string
 	if sharedState.Location["Previous"] == "" {
 		fmt.Println("you're on the first page")
@@ -69,6 +69,15 @@ func commandMapB( sharedState *config) error {
 	sharedState.Location["Previous"] = locations.Previous
 	for _, location := range locations.Results {
 		fmt.Println(location.Name)
+	}
+	return nil
+}
+
+
+func commandExplore( sharedState *config, area string) error {
+	err := sharedState.client.ExploreArea(area)
+	if err != nil {
+		return err
 	}
 	return nil
 }
