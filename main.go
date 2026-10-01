@@ -42,12 +42,18 @@ func main() {
 				description: "Explore a location for pokemon",
 				callback:    commandExplore,
 			},
+			"catch": {
+				name:        "catch",
+				description: "Attempt to catch a pokemon",
+				callback:    commandCatch,
+			},
 		},
 		Location: map[string]string {
 			"Next": "",
 			"Previous": "",
 		},
 		client: pokeapiClient,
+		pokeDex: map[string]pokeapi.Pokemon {},
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)

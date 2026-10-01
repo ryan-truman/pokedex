@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"math/rand/v2"
 	"pokedex/internal/pokeapi"
 )
 
@@ -10,6 +11,7 @@ type config struct {
 	cliCommands map[string]cliCommand
 	Location    map[string]string
 	client      pokeapi.Client
+	pokeDex     map[string]pokeapi.Pokemon
 }
 
 type cliCommand struct {
@@ -78,6 +80,23 @@ func commandExplore( sharedState *config, area string) error {
 	err := sharedState.client.ExploreArea(area)
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+
+func commandCatch( sharedState *config, pokemon string) error {
+	fmt.Printf("Throwing a Pokeball at %v...\n", pokemon)
+	targetPokemon, err := sharedState.client.GetPokemon(pokemon)
+	if err != nil {
+		return err
+	}
+
+	if rand.IntN(650) < min(600, targetPokemon.BaseExperience) {
+		fmt.Printf("%v escaped!\n", targetPokemon.Name)
+	} else {
+		sharedState.pokeDex[targetPokemon.Name] = targetPokemon
+		fmt.Printf("%v was caught!\n", targetPokemon.Name)
 	}
 	return nil
 }
