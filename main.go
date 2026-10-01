@@ -52,6 +52,11 @@ func main() {
 				description: "Inspect a caught pokemon",
 				callback:    commandInspect,
 			},
+			"pokedex": {
+				name:        "pokedex",
+				description: "Show all pokemon in your pokedex",
+				callback:    commandPokedex,
+			},
 		},
 		Location: map[string]string {
 			"Next": "",

@@ -120,3 +120,11 @@ func commandInspect( sharedState *config, pokemon string) error {
 	}
 	return nil
 }
+
+func commandPokedex( sharedState *config, args string) error {
+	fmt.Println("Your Pokedex:")
+	for _, pokemon := range sharedState.pokeDex {
+		fmt.Printf("- %v\n", pokemon.Name)
+	}
+	return nil
+}
