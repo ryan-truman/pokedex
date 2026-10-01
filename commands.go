@@ -100,3 +100,23 @@ func commandCatch( sharedState *config, pokemon string) error {
 	}
 	return nil
 }
+
+func commandInspect( sharedState *config, pokemon string) error {
+	targetPokemon, ok := sharedState.pokeDex[pokemon]
+	if !ok {
+		fmt.Println("you have not caught that pokemon")
+		return nil
+	}
+	fmt.Printf("Name: %v\n", targetPokemon.Name)
+	fmt.Printf("Height: %v\n", targetPokemon.Height)
+	fmt.Printf("Weight: %v\n", targetPokemon.Weight)
+	fmt.Println("Stats:")
+	for _, stat := range targetPokemon.Stats{
+		fmt.Printf("    -%v:%v \n", stat.Stat.Name, stat.BaseStat)
+	}
+	fmt.Println("Types:")
+	for _, Each := range targetPokemon.Types{
+		fmt.Printf("    - %v\n", Each.Type.Name)
+	}
+	return nil
+}
